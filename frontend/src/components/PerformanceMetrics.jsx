@@ -95,13 +95,13 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
           const IconComponent = metric.icon;
           return (
             <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-4">
                 <IconComponent size={20} className={colors.icon} />
               <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <p className="text-sm text-left font-medium text-gray-700 dark:text-gray-300">
                   {metric.label}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-left text-gray-500 dark:text-gray-400">
                   {metric.subtext}
                 </p>
               </div>
