@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [selectedScenario, setSelectedScenario] = useState('stock-prices');
   const [isRunning, setIsRunning] = useState(false);
   const [duration, setDuration] = useState(30);
+  const [simulationKey, setSimulationKey] = useState(0);
 
   // SSE Connection
   const {
@@ -21,6 +22,7 @@ const Dashboard = () => {
     metrics: sseMetrics,
     connect: connectSSE,
     disconnect: disconnectSSE,
+    clearData: clearSSEData,
     error: sseError
   } = useSSE();
 
@@ -32,6 +34,7 @@ const Dashboard = () => {
     metrics: wsMetrics,
     connect: connectWS,
     disconnect: disconnectWS,
+    clearData: clearWSData,
     error: wsError
   } = useWebSocket();
 
@@ -48,6 +51,11 @@ const Dashboard = () => {
 
   const handleStartSimulation = async () => {
     if (isRunning) return;
+    
+    // Clear old data before starting new simulation
+    clearSSEData();
+    clearWSData();
+    setSimulationKey(prev => prev + 1);
     
     try {
       const response = await fetch('http://localhost:3001/api/simulate/both', {
@@ -205,12 +213,14 @@ const Dashboard = () => {
       {/* Data Visualization */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <DataVisualization
+          key={`sse-${simulationKey}`}
           title="SSE Data Stream"
           data={sseData}
           scenario={selectedScenario}
           color="blue"
         />
         <DataVisualization
+          key={`ws-${simulationKey}`}
           title="WebSocket Data Stream"
           data={wsData}
           scenario={selectedScenario}

@@ -17,8 +17,7 @@ const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
     if (data && data.timestamp !== lastUpdate) {
       setDisplayData(prevData => {
         const newData = [...prevData, { ...data, id: Date.now() }];
-        // Keep only last 10 items for display
-        return newData.slice(-10);
+        return newData;
       });
       setLastUpdate(data.timestamp);
     }

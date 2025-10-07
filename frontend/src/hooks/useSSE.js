@@ -119,6 +119,11 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
     reconnectAttempts.current = 0;
   }, []);
 
+  const clearData = useCallback(() => {
+    setData(null);
+    setMetrics(null);
+  }, []);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -154,6 +159,7 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
     error,
     connectionId,
     connect,
-    disconnect
+    disconnect,
+    clearData
   };
 };

@@ -154,6 +154,11 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
     return false;
   }, []);
 
+  const clearData = useCallback(() => {
+    setData(null);
+    setMetrics(null);
+  }, []);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -190,6 +195,7 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
     connectionId,
     connect,
     disconnect,
-    sendMessage
+    sendMessage,
+    clearData
   };
 };
