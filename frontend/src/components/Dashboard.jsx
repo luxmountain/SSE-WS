@@ -168,22 +168,8 @@ const Dashboard = () => {
         onStop={handleStopSimulation}
       />
 
-      {/* Performance Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <PerformanceMetrics
-          title="SSE Performance"
-          metrics={sseMetrics}
-          color="blue"
-        />
-        <PerformanceMetrics
-          title="WebSocket Performance"
-          metrics={wsMetrics}
-          color="green"
-        />
-      </div>
-
       {/* Data Visualization */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <DataVisualization
           key={`sse-${simulationKey}`}
           title="SSE Data Stream"
@@ -196,6 +182,20 @@ const Dashboard = () => {
           title="WebSocket Data Stream"
           data={wsData}
           scenario={selectedScenario}
+          color="green"
+        />
+      </div>
+
+      {/* Performance Metrics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PerformanceMetrics
+          title="SSE Performance"
+          metrics={sseMetrics}
+          color="blue"
+        />
+        <PerformanceMetrics
+          title="WebSocket Performance"
+          metrics={wsMetrics}
           color="green"
         />
       </div>

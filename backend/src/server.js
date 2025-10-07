@@ -36,10 +36,10 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
   allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'Cache-Control', 
-    'Accept', 
+    'Content-Type',
+    'Authorization',
+    'Cache-Control',
+    'Accept',
     'Accept-Encoding',
     'Accept-Language',
     'Connection',
@@ -50,7 +50,7 @@ app.use(cors({
   ],
   exposedHeaders: [
     'Content-Type',
-    'Cache-Control', 
+    'Cache-Control',
     'Connection',
     'Transfer-Encoding'
   ]
@@ -84,28 +84,28 @@ app.get('/api/stats', (req, res) => {
 app.post('/api/simulate/:type', (req, res) => {
   const { type } = req.params;
   const { scenario, duration = 30 } = req.body;
-  
+
   try {
     dataGenerator.startSimulation(type, scenario, duration * 1000);
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: `Started ${scenario} simulation for ${duration} seconds`,
       type,
       scenario
     });
   } catch (error) {
-    res.status(400).json({ 
-      success: false, 
-      error: error.message 
+    res.status(400).json({
+      success: false,
+      error: error.message
     });
   }
 });
 
 app.post('/api/stop-simulation', (req, res) => {
   dataGenerator.stopAllSimulations();
-  res.json({ 
-    success: true, 
-    message: 'All simulations stopped' 
+  res.json({
+    success: true,
+    message: 'All simulations stopped'
   });
 });
 

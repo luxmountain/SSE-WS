@@ -67,6 +67,7 @@ class SSEConnection {
     });
   }
 
+  // Measurement latency and connection quality
   startHeartbeat() {
     this.heartbeatInterval = setInterval(() => {
       if (!this.connected) return;
