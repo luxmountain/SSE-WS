@@ -43,8 +43,12 @@
     "rimraf": "^5.0.5"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "yarn": ">=1.22.0"
+    "node": ">=20.0.0",
+    "yarn": ">=4.0.0"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@4.9.2",
+  "volta": {
+    "node": "20.18.0",
+    "yarn": "4.9.2"
+  }
 }
