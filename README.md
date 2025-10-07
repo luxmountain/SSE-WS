@@ -30,26 +30,17 @@ This demo showcases the performance characteristics, connection management, and 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+- Node.js: v20
+- Yarn: v4
 
 ### Installation
 
-1. **Backend Setup**
+1. **Setup**
 ```bash
-cd backend
-npm install
-npm start
+yarn setup
+yarn dev
 ```
-
-2. **Frontend Setup**
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-3. **Open Browser**
+2. **Open Browser**
 Navigate to `http://localhost:5173`
 
 ## 📊 Features
@@ -115,13 +106,6 @@ Navigate to `http://localhost:5173`
 - Gaming
 - Trading platforms
 - Video conferencing
-
-## 🛠️ Development
-
-Run both servers concurrently:
-```bash
-npm run dev:all
-```
 
 ## 📋 Demo Scenarios
 
