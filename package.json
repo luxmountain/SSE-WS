@@ -30,9 +30,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/sse-websocket-demo"
+    "url": "https://github.com/luxmountain/SSE-WS"
   },
-  "author": "Your Name",
+  "author": "Ta Cao Son",
   "license": "MIT",
   "workspaces": [
     "backend",
