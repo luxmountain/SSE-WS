@@ -5,7 +5,6 @@ import ConnectionStatus from './ConnectionStatus';
 import PerformanceMetrics from './PerformanceMetrics';
 import DataVisualization from './DataVisualization';
 import SimulationControls from './SimulationControls';
-import ComparisonChart from './ComparisonChart';
 import { BarChart3, Clock, TrendingUp, MessageSquare, Monitor, Thermometer, Zap, Smartphone } from 'lucide-react';
 
 const Dashboard = () => {
@@ -220,11 +219,6 @@ const Dashboard = () => {
         onStart={handleStartSimulation}
         onStop={handleStopSimulation}
       />
-
-      {/* Performance Comparison Chart */}
-      <div className="mb-8">
-        <ComparisonChart sseMetrics={sseMetrics} wsMetrics={wsMetrics} />
-      </div>
 
       {/* Performance Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
