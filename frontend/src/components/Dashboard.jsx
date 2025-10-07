@@ -6,7 +6,7 @@ import PerformanceMetrics from './PerformanceMetrics';
 import DataVisualization from './DataVisualization';
 import SimulationControls from './SimulationControls';
 import ComparisonChart from './ComparisonChart';
-// Removed icon imports to avoid Yarn PnP issues
+import { BarChart3, Clock, TrendingUp, MessageSquare, Monitor, Thermometer, Zap, Smartphone } from 'lucide-react';
 
 const Dashboard = () => {
   const [selectedScenario, setSelectedScenario] = useState('stock-prices');
@@ -82,12 +82,12 @@ const Dashboard = () => {
   };
 
   const scenarios = [
-    { value: 'stock-prices', label: 'Stock Prices', icon: '📈' },
-    { value: 'social-feed', label: 'Social Feed', icon: '📱' },
-    { value: 'system-metrics', label: 'System Metrics', icon: '🖥️' },
-    { value: 'chat-messages', label: 'Chat Messages', icon: '💬' },
-    { value: 'iot-sensors', label: 'IoT Sensors', icon: '🌡️' },
-    { value: 'high-frequency', label: 'High Frequency', icon: '⚡' }
+    { value: 'stock-prices', label: 'Stock Prices', icon: TrendingUp },
+    { value: 'social-feed', label: 'Social Feed', icon: Smartphone },
+    { value: 'system-metrics', label: 'System Metrics', icon: Monitor },
+    { value: 'chat-messages', label: 'Chat Messages', icon: MessageSquare },
+    { value: 'iot-sensors', label: 'IoT Sensors', icon: Thermometer },
+    { value: 'high-frequency', label: 'High Frequency', icon: Zap }
   ];
 
   return (
@@ -103,7 +103,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-              <span className="text-2xl">📊</span>
+              <BarChart3 size={24} className="text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-              <span className="text-2xl">📊</span>
+              <BarChart3 size={24} className="text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-              <span className="text-2xl">⏱️</span>
+              <Clock size={24} className="text-purple-600 dark:text-purple-400" />
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
-              <span className="text-2xl">⏱️</span>
+              <Clock size={24} className="text-orange-600 dark:text-orange-400" />
             </div>
           </div>
         </div>

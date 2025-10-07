@@ -1,4 +1,13 @@
 import { useState, useEffect } from 'react';
+import { 
+  TrendingUp, 
+  MessageCircle, 
+  Monitor, 
+  Thermometer, 
+  Zap, 
+  Database,
+  Heart
+} from 'lucide-react';
 
 const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
   const [displayData, setDisplayData] = useState([]);
@@ -34,17 +43,17 @@ const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
 
   const getScenarioIcon = (scenario) => {
     const icons = {
-      'stock-prices': '📈',
-      'social-feed': '💬',
-      'system-metrics': '🖥️',
-      'chat-messages': '💬',
-      'iot-sensors': '🌡️',
-      'high-frequency': '⚡'
+      'stock-prices': TrendingUp,
+      'social-feed': MessageCircle,
+      'system-metrics': Monitor,
+      'chat-messages': MessageCircle,
+      'iot-sensors': Thermometer,
+      'high-frequency': Zap
     };
-    return icons[scenario] || '💾';
+    return icons[scenario] || Database;
   };
 
-  const scenarioIcon = getScenarioIcon(scenario);
+  const ScenarioIcon = getScenarioIcon(scenario);
 
   const renderScenarioData = (item) => {
     if (!item || !item.data) return null;
@@ -93,7 +102,9 @@ const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
           <span className="text-sm">
             <strong>{activity.user}</strong> {activity.action} {activity.topic}
           </span>
-          <span className="text-xs text-gray-500">{activity.likes} ❤️</span>
+          <span className="text-xs text-gray-500 flex items-center gap-1">
+            {activity.likes} <Heart size={12} className="text-red-500" />
+          </span>
         </div>
       )) : (
         <div>No social data available</div>
@@ -189,7 +200,7 @@ const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <div className={`p-2 rounded-lg ${colors.bg}`}>
-            <span className="text-xl">{scenarioIcon}</span>
+            <ScenarioIcon size={20} className={colors.icon} />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             {title}
@@ -226,7 +237,9 @@ const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
         ) : (
           <div className="flex items-center justify-center h-32">
             <div className="text-center">
-              <span className="text-5xl text-gray-400 mb-2 block">{scenarioIcon}</span>
+              <div className="mb-2">
+                <ScenarioIcon size={48} className="text-gray-400 mx-auto" />
+              </div>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
                 Waiting for {scenario.replace('-', ' ')} data...
               </p>

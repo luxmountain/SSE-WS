@@ -1,3 +1,5 @@
+import { Sun, Moon, Zap, Circle } from 'lucide-react';
+
 const Header = ({ darkMode, toggleDarkMode }) => {
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -5,13 +7,15 @@ const Header = ({ darkMode, toggleDarkMode }) => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold">⚡</div>
+              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white">
+                <Zap size={20} />
+              </div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                 SSE vs WebSocket Demo
               </h1>
             </div>
             <div className="hidden md:flex items-center space-x-2 px-3 py-1 bg-blue-100 dark:bg-blue-900 rounded-full">
-              <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+              <Circle size={16} className="text-blue-600 fill-blue-600" />
               <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
                 Real-time Performance Comparison
               </span>
@@ -25,9 +29,9 @@ const Header = ({ darkMode, toggleDarkMode }) => {
               aria-label="Toggle dark mode"
             >
               {darkMode ? (
-                <span className="text-lg">☀️</span>
+                <Sun size={20} />
               ) : (
-                <span className="text-lg">🌙</span>
+                <Moon size={20} />
               )}
             </button>
             

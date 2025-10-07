@@ -1,4 +1,4 @@
-// Using emoji icons instead of lucide-react for Yarn compatibility
+import { CheckCircle, AlertCircle, XCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 
 const ConnectionStatus = ({ 
   type, 
@@ -11,16 +11,16 @@ const ConnectionStatus = ({
   const getStatusIcon = () => {
     switch (status) {
       case 'connected':
-        return <span className="text-green-500">✅</span>;
+        return <CheckCircle size={16} className="text-green-500" />;
       case 'connecting':
       case 'reconnecting':
-        return <span className="text-yellow-500 animate-spin">🔄</span>;
+        return <RefreshCw size={16} className="text-yellow-500 animate-spin" />;
       case 'error':
       case 'failed':
-        return <span className="text-red-500">❌</span>;
+        return <XCircle size={16} className="text-red-500" />;
       case 'disconnected':
       default:
-        return <span className="text-gray-500">⚠️</span>;
+        return <AlertCircle size={16} className="text-gray-500" />;
     }
   };
 
@@ -63,9 +63,9 @@ const ConnectionStatus = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           {isConnected ? (
-            <span className="text-2xl text-green-500">📶</span>
+            <Wifi size={24} className="text-green-500" />
           ) : (
-            <span className="text-2xl text-gray-400">📵</span>
+            <WifiOff size={24} className="text-gray-400" />
           )}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -93,7 +93,7 @@ const ConnectionStatus = ({
               disabled={status === 'connecting' || status === 'reconnecting'}
             >
               {status === 'connecting' || status === 'reconnecting' ? (
-                <span className="animate-spin">🔄</span>
+                <RefreshCw size={16} className="animate-spin" />
               ) : (
                 'Connect'
               )}
@@ -105,7 +105,7 @@ const ConnectionStatus = ({
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
           <div className="flex items-center">
-            <span className="text-red-500 mr-2">❌</span>
+            <XCircle size={16} className="text-red-500 mr-2" />
             <span className="text-sm text-red-700 dark:text-red-400">{error}</span>
           </div>
         </div>

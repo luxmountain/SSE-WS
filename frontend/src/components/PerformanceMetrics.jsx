@@ -1,4 +1,4 @@
-// Using emoji icons for Yarn compatibility
+import { BarChart3, AlertTriangle, Clock, Zap, TrendingUp, Activity } from 'lucide-react';
 
 const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
   if (!metrics) {
@@ -6,7 +6,7 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
       <div className="card p-6">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <span className="text-5xl text-gray-400 block mb-4">⚠️</span>
+            <AlertTriangle size={48} className="text-gray-400 mb-4 mx-auto" />
             <p className="text-gray-500 dark:text-gray-400">No metrics available</p>
           </div>
         </div>
@@ -48,25 +48,25 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
 
   const metricsData = [
     {
-      icon: '📊',
+      icon: BarChart3,
       label: 'Total Messages',
       value: metrics.totalMessages?.toLocaleString() || '0',
       subtext: 'messages sent'
     },
     {
-      icon: '⚡',
+      icon: Zap,
       label: 'Data Transfer',
       value: formatBytes(metrics.totalBytes || 0),
       subtext: 'total transferred'
     },
     {
-      icon: '⏱️',
+      icon: Clock,
       label: 'Average Latency',
       value: `${metrics.averageLatency || 0}ms`,
       subtext: `${metrics.minLatency || 0}ms - ${metrics.maxLatency || 0}ms range`
     },
     {
-      icon: '🚀',
+      icon: TrendingUp,
       label: 'Throughput',
       value: `${metrics.messagesPerSecond || 0}`,
       subtext: 'messages per second'
@@ -78,7 +78,7 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <div className={`p-2 rounded-lg ${colors.bg}`}>
-            <span className="text-2xl">📊</span>
+            <Activity size={20} className={colors.icon} />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             {title}
@@ -91,10 +91,12 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
       </div>
 
       <div className="space-y-4">
-        {metricsData.map((metric, index) => (
-          <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <span className="text-xl">{metric.icon}</span>
+        {metricsData.map((metric, index) => {
+          const IconComponent = metric.icon;
+          return (
+            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <IconComponent size={20} className={colors.icon} />
               <div>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {metric.label}
@@ -110,7 +112,8 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
               </p>
             </div>
           </div>
-        ))}
+        );
+        })}
       </div>
 
       {/* Performance Indicators */}

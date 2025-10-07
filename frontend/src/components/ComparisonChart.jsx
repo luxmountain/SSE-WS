@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BarChart3, Zap, TrendingUp, Globe, Activity } from 'lucide-react';
 
 const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
   const [chartData, setChartData] = useState([]);
@@ -34,16 +35,16 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
   }, [sseMetrics, wsMetrics]);
 
   const tabs = [
-    { id: 'latency', label: 'Latency Comparison', icon: '⚡' },
-    { id: 'throughput', label: 'Throughput Comparison', icon: '📊' },
-    { id: 'messages', label: 'Message Count', icon: '📈' },
-    { id: 'bandwidth', label: 'Bandwidth Usage', icon: '🌐' }
+    { id: 'latency', label: 'Latency Comparison', icon: Zap },
+    { id: 'throughput', label: 'Throughput Comparison', icon: BarChart3 },
+    { id: 'messages', label: 'Message Count', icon: TrendingUp },
+    { id: 'bandwidth', label: 'Bandwidth Usage', icon: Globe }
   ];
 
   const renderLatencyChart = () => (
     <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
       <div className="text-center">
-        <div className="text-4xl mb-4">📈</div>
+        <Zap size={48} className="text-gray-400 mb-4 mx-auto" />
         <div className="text-gray-600 dark:text-gray-400">
           <div className="mb-2">
             <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
@@ -61,7 +62,7 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
   const renderThroughputChart = () => (
     <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
       <div className="text-center">
-        <div className="text-4xl mb-4">📊</div>
+        <BarChart3 size={48} className="text-gray-400 mb-4 mx-auto" />
         <div className="text-gray-600 dark:text-gray-400">
           <div className="mb-2">
             <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
@@ -79,7 +80,7 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
   const renderMessagesChart = () => (
     <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
       <div className="text-center">
-        <div className="text-4xl mb-4">📈</div>
+        <TrendingUp size={48} className="text-gray-400 mb-4 mx-auto" />
         <div className="text-gray-600 dark:text-gray-400">
           <div className="mb-2">
             <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
@@ -97,7 +98,7 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
   const renderBandwidthChart = () => (
     <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
       <div className="text-center">
-        <div className="text-4xl mb-4">🌐</div>
+        <Globe size={48} className="text-gray-400 mb-4 mx-auto" />
         <div className="text-gray-600 dark:text-gray-400">
           <div className="mb-2">
             <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
@@ -153,20 +154,23 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
 
       {/* Tab Navigation */}
       <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mb-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === tab.id
-                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            <span>{tab.icon}</span>
+        {tabs.map((tab) => {
+          const IconComponent = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === tab.id
+                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              <IconComponent size={16} />
             <span className="hidden sm:inline">{tab.label}</span>
           </button>
-        ))}
+        );
+        })}
       </div>
 
       {/* Chart Content */}
@@ -177,7 +181,7 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl text-gray-400">📊</span>
+                <Activity size={32} className="text-gray-400" />
               </div>
               <p className="text-gray-500 dark:text-gray-400">
                 Waiting for performance data...
