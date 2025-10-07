@@ -32,8 +32,26 @@ app.use(compression());
 app.use(cors({
   origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
   credentials: true,
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control']
+  methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Cache-Control', 
+    'Accept', 
+    'Accept-Encoding',
+    'Accept-Language',
+    'Connection',
+    'Host',
+    'Origin',
+    'Referer',
+    'User-Agent'
+  ],
+  exposedHeaders: [
+    'Content-Type',
+    'Cache-Control', 
+    'Connection',
+    'Transfer-Encoding'
+  ]
 }));
 
 app.use(express.json({ limit: '10mb' }));

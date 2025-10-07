@@ -28,18 +28,23 @@ class SSEConnection {
   }
 
   setupConnection() {
-    // Set SSE headers with proper fallback support
+    // Get the origin from request headers for dynamic CORS
+    const origin = this.res.req.headers.origin || 'http://localhost:5173';
+    
+    // Set SSE headers with proper CORS support
     this.res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store, must-revalidate, no-transform',
       'Connection': 'keep-alive',
-      'Access-Control-Allow-Origin': 'http://localhost:5173',
+      'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Credentials': 'true',
-      'Access-Control-Expose-Headers': 'Content-Type, Cache-Control',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cache-Control, Accept',
+      'Access-Control-Expose-Headers': 'Content-Type, Cache-Control, Connection',
       'X-Accel-Buffering': 'no', // Disable nginx buffering
-      'Transfer-Encoding': 'chunked',
       'Pragma': 'no-cache',
-      'Expires': '0'
+      'Expires': '0',
+      'Vary': 'Origin'
     });
 
     // Send initial connection event
@@ -267,8 +272,23 @@ class SSEManager {
 function setupSSE(app, dataGenerator, performanceMonitor) {
   const sseManager = new SSEManager(performanceMonitor);
 
+  // Handle preflight requests for SSE endpoint
+  app.options('/events', (req, res) => {
+    const origin = req.headers.origin || 'http://localhost:5173';
+    res.set({
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cache-Control, Accept',
+      'Access-Control-Max-Age': '86400', // 24 hours
+      'Vary': 'Origin'
+    });
+    res.status(204).end();
+  });
+
   // Main SSE endpoint
   app.get('/events', (req, res) => {
+    console.log(`📡 SSE connection request from origin: ${req.headers.origin}`);
     const connection = sseManager.addConnection(res);
     
     // Send initial data if available
