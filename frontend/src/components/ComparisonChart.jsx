@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
 
 const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
   const [chartData, setChartData] = useState([]);
@@ -42,149 +41,75 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
   ];
 
   const renderLatencyChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-        <XAxis 
-          dataKey="time" 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-        />
-        <YAxis 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-          label={{ value: 'Latency (ms)', angle: -90, position: 'insideLeft' }}
-        />
-        <Tooltip 
-          contentStyle={{ 
-            backgroundColor: '#1F2937', 
-            border: '1px solid #374151',
-            borderRadius: '8px',
-            color: '#F9FAFB'
-          }}
-        />
-        <Legend />
-        <Line 
-          type="monotone" 
-          dataKey="sseLatency" 
-          stroke="#3B82F6" 
-          name="SSE Latency"
-          strokeWidth={2}
-          dot={{ fill: '#3B82F6', strokeWidth: 2, r: 3 }}
-        />
-        <Line 
-          type="monotone" 
-          dataKey="wsLatency" 
-          stroke="#10B981" 
-          name="WebSocket Latency"
-          strokeWidth={2}
-          dot={{ fill: '#10B981', strokeWidth: 2, r: 3 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <div className="text-center">
+        <div className="text-4xl mb-4">📈</div>
+        <div className="text-gray-600 dark:text-gray-400">
+          <div className="mb-2">
+            <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
+            SSE Latency: {chartData[chartData.length - 1]?.sseLatency || 0}ms
+          </div>
+          <div>
+            <span className="inline-block w-3 h-3 bg-green-500 mr-2"></span>
+            WebSocket Latency: {chartData[chartData.length - 1]?.wsLatency || 0}ms
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   const renderThroughputChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={chartData.slice(-10)}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-        <XAxis 
-          dataKey="time" 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-        />
-        <YAxis 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-          label={{ value: 'Messages/sec', angle: -90, position: 'insideLeft' }}
-        />
-        <Tooltip 
-          contentStyle={{ 
-            backgroundColor: '#1F2937', 
-            border: '1px solid #374151',
-            borderRadius: '8px',
-            color: '#F9FAFB'
-          }}
-        />
-        <Legend />
-        <Bar dataKey="sseThroughput" fill="#3B82F6" name="SSE Throughput" />
-        <Bar dataKey="wsThroughput" fill="#10B981" name="WebSocket Throughput" />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <div className="text-center">
+        <div className="text-4xl mb-4">📊</div>
+        <div className="text-gray-600 dark:text-gray-400">
+          <div className="mb-2">
+            <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
+            SSE Throughput: {chartData[chartData.length - 1]?.sseThroughput || 0} msg/sec
+          </div>
+          <div>
+            <span className="inline-block w-3 h-3 bg-green-500 mr-2"></span>
+            WebSocket Throughput: {chartData[chartData.length - 1]?.wsThroughput || 0} msg/sec
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   const renderMessagesChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-        <XAxis 
-          dataKey="time" 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-        />
-        <YAxis 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-          label={{ value: 'Total Messages', angle: -90, position: 'insideLeft' }}
-        />
-        <Tooltip 
-          contentStyle={{ 
-            backgroundColor: '#1F2937', 
-            border: '1px solid #374151',
-            borderRadius: '8px',
-            color: '#F9FAFB'
-          }}
-        />
-        <Legend />
-        <Line 
-          type="monotone" 
-          dataKey="sseMessages" 
-          stroke="#3B82F6" 
-          name="SSE Messages"
-          strokeWidth={2}
-        />
-        <Line 
-          type="monotone" 
-          dataKey="wsMessages" 
-          stroke="#10B981" 
-          name="WebSocket Messages"
-          strokeWidth={2}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <div className="text-center">
+        <div className="text-4xl mb-4">📈</div>
+        <div className="text-gray-600 dark:text-gray-400">
+          <div className="mb-2">
+            <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
+            SSE Messages: {chartData[chartData.length - 1]?.sseMessages || 0}
+          </div>
+          <div>
+            <span className="inline-block w-3 h-3 bg-green-500 mr-2"></span>
+            WebSocket Messages: {chartData[chartData.length - 1]?.wsMessages || 0}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   const renderBandwidthChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={chartData.slice(-10)}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-        <XAxis 
-          dataKey="time" 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-        />
-        <YAxis 
-          stroke="#6B7280"
-          tick={{ fontSize: 12 }}
-          label={{ value: 'Bytes', angle: -90, position: 'insideLeft' }}
-        />
-        <Tooltip 
-          contentStyle={{ 
-            backgroundColor: '#1F2937', 
-            border: '1px solid #374151',
-            borderRadius: '8px',
-            color: '#F9FAFB'
-          }}
-          formatter={(value, name) => [
-            `${Math.round(value / 1024)} KB`,
-            name
-          ]}
-        />
-        <Legend />
-        <Bar dataKey="sseBytes" fill="#3B82F6" name="SSE Data" />
-        <Bar dataKey="wsBytes" fill="#10B981" name="WebSocket Data" />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <div className="text-center">
+        <div className="text-4xl mb-4">🌐</div>
+        <div className="text-gray-600 dark:text-gray-400">
+          <div className="mb-2">
+            <span className="inline-block w-3 h-3 bg-blue-500 mr-2"></span>
+            SSE Data: {Math.round((chartData[chartData.length - 1]?.sseBytes || 0) / 1024)} KB
+          </div>
+          <div>
+            <span className="inline-block w-3 h-3 bg-green-500 mr-2"></span>
+            WebSocket Data: {Math.round((chartData[chartData.length - 1]?.wsBytes || 0) / 1024)} KB
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   const renderChart = () => {
@@ -252,7 +177,7 @@ const ComparisonChart = ({ sseMetrics, wsMetrics }) => {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <BarChart className="w-8 h-8 text-gray-400" />
+                <span className="text-3xl text-gray-400">📊</span>
               </div>
               <p className="text-gray-500 dark:text-gray-400">
                 Waiting for performance data...

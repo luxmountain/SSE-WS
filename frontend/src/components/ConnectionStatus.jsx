@@ -1,4 +1,4 @@
-import { Wifi, WifiOff, RefreshCw, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+// Using emoji icons instead of lucide-react for Yarn compatibility
 
 const ConnectionStatus = ({ 
   type, 
@@ -11,16 +11,16 @@ const ConnectionStatus = ({
   const getStatusIcon = () => {
     switch (status) {
       case 'connected':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <span className="text-green-500">✅</span>;
       case 'connecting':
       case 'reconnecting':
-        return <RefreshCw className="w-5 h-5 text-yellow-500 animate-spin" />;
+        return <span className="text-yellow-500 animate-spin">🔄</span>;
       case 'error':
       case 'failed':
-        return <XCircle className="w-5 h-5 text-red-500" />;
+        return <span className="text-red-500">❌</span>;
       case 'disconnected':
       default:
-        return <AlertCircle className="w-5 h-5 text-gray-500" />;
+        return <span className="text-gray-500">⚠️</span>;
     }
   };
 
@@ -63,9 +63,9 @@ const ConnectionStatus = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           {isConnected ? (
-            <Wifi className="w-8 h-8 text-green-500" />
+            <span className="text-2xl text-green-500">📶</span>
           ) : (
-            <WifiOff className="w-8 h-8 text-gray-400" />
+            <span className="text-2xl text-gray-400">📵</span>
           )}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -93,7 +93,7 @@ const ConnectionStatus = ({
               disabled={status === 'connecting' || status === 'reconnecting'}
             >
               {status === 'connecting' || status === 'reconnecting' ? (
-                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span className="animate-spin">🔄</span>
               ) : (
                 'Connect'
               )}
@@ -105,7 +105,7 @@ const ConnectionStatus = ({
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
           <div className="flex items-center">
-            <XCircle className="w-5 h-5 text-red-500 mr-2" />
+            <span className="text-red-500 mr-2">❌</span>
             <span className="text-sm text-red-700 dark:text-red-400">{error}</span>
           </div>
         </div>

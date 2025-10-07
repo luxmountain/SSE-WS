@@ -1,4 +1,4 @@
-import { BarChart3, Clock, Zap, Users, AlertCircle } from 'lucide-react';
+// Using emoji icons for Yarn compatibility
 
 const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
   if (!metrics) {
@@ -6,7 +6,7 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
       <div className="card p-6">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <span className="text-5xl text-gray-400 block mb-4">⚠️</span>
             <p className="text-gray-500 dark:text-gray-400">No metrics available</p>
           </div>
         </div>
@@ -48,25 +48,25 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
 
   const metricsData = [
     {
-      icon: BarChart3,
+      icon: '📊',
       label: 'Total Messages',
       value: metrics.totalMessages?.toLocaleString() || '0',
       subtext: 'messages sent'
     },
     {
-      icon: Zap,
+      icon: '⚡',
       label: 'Data Transfer',
       value: formatBytes(metrics.totalBytes || 0),
       subtext: 'total transferred'
     },
     {
-      icon: Clock,
+      icon: '⏱️',
       label: 'Average Latency',
       value: `${metrics.averageLatency || 0}ms`,
       subtext: `${metrics.minLatency || 0}ms - ${metrics.maxLatency || 0}ms range`
     },
     {
-      icon: BarChart3,
+      icon: '🚀',
       label: 'Throughput',
       value: `${metrics.messagesPerSecond || 0}`,
       subtext: 'messages per second'
@@ -78,7 +78,7 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <div className={`p-2 rounded-lg ${colors.bg}`}>
-            <BarChart3 className={`w-6 h-6 ${colors.icon}`} />
+            <span className="text-2xl">📊</span>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             {title}
@@ -94,7 +94,7 @@ const PerformanceMetrics = ({ title, metrics, color = 'blue' }) => {
         {metricsData.map((metric, index) => (
           <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <div className="flex items-center space-x-3">
-              <metric.icon className={`w-5 h-5 ${colors.icon}`} />
+              <span className="text-xl">{metric.icon}</span>
               <div>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {metric.label}

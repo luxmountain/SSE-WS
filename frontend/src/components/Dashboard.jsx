@@ -6,7 +6,7 @@ import PerformanceMetrics from './PerformanceMetrics';
 import DataVisualization from './DataVisualization';
 import SimulationControls from './SimulationControls';
 import ComparisonChart from './ComparisonChart';
-import { Play, Pause, BarChart3, TrendingUp } from 'lucide-react';
+// Removed icon imports to avoid Yarn PnP issues
 
 const Dashboard = () => {
   const [selectedScenario, setSelectedScenario] = useState('stock-prices');
@@ -82,12 +82,12 @@ const Dashboard = () => {
   };
 
   const scenarios = [
-    { value: 'stock-prices', label: 'Stock Prices', icon: TrendingUp },
-    { value: 'social-feed', label: 'Social Feed', icon: BarChart3 },
-    { value: 'system-metrics', label: 'System Metrics', icon: BarChart3 },
-    { value: 'chat-messages', label: 'Chat Messages', icon: BarChart3 },
-    { value: 'iot-sensors', label: 'IoT Sensors', icon: BarChart3 },
-    { value: 'high-frequency', label: 'High Frequency', icon: BarChart3 }
+    { value: 'stock-prices', label: 'Stock Prices', icon: '📈' },
+    { value: 'social-feed', label: 'Social Feed', icon: '📱' },
+    { value: 'system-metrics', label: 'System Metrics', icon: '🖥️' },
+    { value: 'chat-messages', label: 'Chat Messages', icon: '💬' },
+    { value: 'iot-sensors', label: 'IoT Sensors', icon: '🌡️' },
+    { value: 'high-frequency', label: 'High Frequency', icon: '⚡' }
   ];
 
   return (
@@ -103,7 +103,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <span className="text-2xl">📊</span>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-green-600 dark:text-green-400" />
+              <span className="text-2xl">📊</span>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              <span className="text-2xl">⏱️</span>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@ const Dashboard = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+              <span className="text-2xl">⏱️</span>
             </div>
           </div>
         </div>

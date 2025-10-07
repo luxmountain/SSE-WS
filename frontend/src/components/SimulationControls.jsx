@@ -1,4 +1,4 @@
-import { Play, Pause, Settings } from 'lucide-react';
+// Using emoji icons for Yarn compatibility
 
 const SimulationControls = ({
   scenarios,
@@ -14,7 +14,7 @@ const SimulationControls = ({
     <div className="card p-6 mb-8">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
-          <Settings className="w-6 h-6 text-blue-600" />
+          <span className="text-2xl">⚙️</span>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Simulation Controls
           </h2>
@@ -97,12 +97,12 @@ const SimulationControls = ({
             >
               {isRunning ? (
                 <>
-                  <Pause className="w-4 h-4 mr-2" />
+                  <span className="mr-2">⏸️</span>
                   Stop
                 </>
               ) : (
                 <>
-                  <Play className="w-4 h-4 mr-2" />
+                  <span className="mr-2">▶️</span>
                   Start
                 </>
               )}
