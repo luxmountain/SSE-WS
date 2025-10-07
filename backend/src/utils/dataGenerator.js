@@ -53,6 +53,7 @@ class DataGenerator extends EventEmitter {
       this.emit('data', data);
       
       // Emit performance metrics periodically
+      // Save bandwidth & relieve CPU -> balance real-time & performance
       if (simulation.messageCount % 10 === 0) {
         this.emit('metrics', {
           scenario,

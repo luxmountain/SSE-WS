@@ -8,6 +8,8 @@ const { setupWebSocket } = require('./websocket');
 const { DataGenerator } = require('./utils/dataGenerator');
 const { PerformanceMonitor } = require('./utils/performanceMonitor');
 
+
+// Websocket can't run in app, so server wrap
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT || 3001;
