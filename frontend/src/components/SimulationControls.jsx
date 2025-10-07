@@ -7,6 +7,7 @@ const SimulationControls = ({
   duration,
   onDurationChange,
   isRunning,
+  timeRemaining = 0,
   onStart,
   onStop
 }) => {
@@ -22,9 +23,17 @@ const SimulationControls = ({
         
         <div className="flex items-center space-x-4">
           {isRunning ? (
-            <div className="flex items-center space-x-2 text-green-600">
-              <Circle size={8} className="fill-green-500 animate-pulse" />
-              <span className="text-sm font-medium">Simulation Running</span>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 text-green-600">
+                <Circle size={8} className="fill-green-500 animate-pulse" />
+                <span className="text-sm font-medium">Simulation Running</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-green-100 dark:bg-green-900/20 px-3 py-1 rounded-lg">
+                <Circle size={6} className="fill-green-500 animate-pulse" />
+                <span className="text-sm font-bold text-green-700 dark:text-green-300">
+                  {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+                </span>
+              </div>
             </div>
           ) : (
             <div className="flex items-center space-x-2 text-gray-500">
@@ -113,6 +122,30 @@ const SimulationControls = ({
           </p>
         </div>
       </div>
+
+      {/* Progress Bar */}
+      {isRunning && (
+        <div className="mt-6 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-orange-700 dark:text-orange-300">
+              Simulation Progress
+            </span>
+            <span className="text-sm text-orange-600 dark:text-orange-400">
+              {Math.round(((duration - timeRemaining) / duration) * 100)}%
+            </span>
+          </div>
+          <div className="w-full bg-orange-200 dark:bg-orange-800 rounded-full h-2">
+            <div 
+              className="bg-orange-500 h-2 rounded-full transition-all duration-1000 ease-linear"
+              style={{ width: `${((duration - timeRemaining) / duration) * 100}%` }}
+            />
+          </div>
+          <div className="flex items-center justify-between mt-2 text-xs text-orange-600 dark:text-orange-400">
+            <span>Elapsed: {duration - timeRemaining}s</span>
+            <span>Remaining: {timeRemaining}s</span>
+          </div>
+        </div>
+      )}
 
       {/* Scenario Description */}
       <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">

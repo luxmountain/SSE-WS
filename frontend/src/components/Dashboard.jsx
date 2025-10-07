@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [duration, setDuration] = useState(30);
   const [simulationKey, setSimulationKey] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(0);
 
   // SSE Connection
   const {
@@ -49,6 +50,29 @@ const Dashboard = () => {
     };
   }, [connectSSE, connectWS, disconnectSSE, disconnectWS]);
 
+  // Countdown timer effect
+  useEffect(() => {
+    let interval = null;
+    
+    if (isRunning && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining(prevTime => {
+          if (prevTime <= 1) {
+            setIsRunning(false);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isRunning, timeRemaining]);
+
   const handleStartSimulation = async () => {
     if (isRunning) return;
     
@@ -71,7 +95,11 @@ const Dashboard = () => {
 
       if (response.ok) {
         setIsRunning(true);
-        setTimeout(() => setIsRunning(false), duration * 1000);
+        setTimeRemaining(duration);
+        setTimeout(() => {
+          setIsRunning(false);
+          setTimeRemaining(0);
+        }, duration * 1000);
       }
     } catch (error) {
       console.error('Failed to start simulation:', error);
@@ -84,6 +112,7 @@ const Dashboard = () => {
         method: 'POST',
       });
       setIsRunning(false);
+      setTimeRemaining(0);
     } catch (error) {
       console.error('Failed to stop simulation:', error);
     }
@@ -187,6 +216,7 @@ const Dashboard = () => {
         duration={duration}
         onDurationChange={setDuration}
         isRunning={isRunning}
+        timeRemaining={timeRemaining}
         onStart={handleStartSimulation}
         onStop={handleStopSimulation}
       />
