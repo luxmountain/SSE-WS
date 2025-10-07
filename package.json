@@ -1,0 +1,50 @@
+{
+  "name": "sse-websocket-performance-demo",
+  "version": "1.0.0",
+  "description": "Comprehensive comparison of Server-Sent Events (SSE) vs WebSocket performance for real-time dashboards",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"yarn dev:backend\" \"yarn dev:frontend\" --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,green\"",
+    "dev:backend": "cd backend && yarn dev",
+    "dev:frontend": "cd frontend && yarn dev",
+    "start": "concurrently \"yarn start:backend\" \"yarn start:frontend\" --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,green\"",
+    "start:backend": "cd backend && yarn start",
+    "start:frontend": "cd frontend && yarn build && yarn preview",
+    "install:all": "yarn install && cd backend && yarn install && cd ../frontend && yarn install",
+    "clean": "rimraf node_modules backend/node_modules frontend/node_modules frontend/dist",
+    "build": "cd frontend && yarn build",
+    "test": "concurrently \"cd backend && yarn test\" \"cd frontend && yarn test\"",
+    "lint": "concurrently \"cd backend && yarn lint\" \"cd frontend && yarn lint\"",
+    "setup": "yarn install:all && echo \"🚀 Project setup complete! Run 'yarn dev' to start both servers.\""
+  },
+  "keywords": [
+    "sse",
+    "websocket",
+    "performance",
+    "real-time",
+    "dashboard",
+    "comparison",
+    "node.js",
+    "react",
+    "demo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/sse-websocket-demo"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "yarn": ">=1.22.0"
+  },
+  "packageManager": "yarn@1.22.19"
+}
