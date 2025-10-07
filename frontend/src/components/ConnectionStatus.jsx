@@ -1,24 +1,31 @@
-import { CheckCircle, AlertCircle, XCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import {
+  CheckCircle,
+  AlertCircle,
+  XCircle,
+  RefreshCw,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
 
-const ConnectionStatus = ({ 
-  type, 
-  isConnected, 
-  status, 
-  error, 
-  onConnect, 
-  onDisconnect 
+const ConnectionStatus = ({
+  type,
+  isConnected,
+  status,
+  error,
+  onConnect,
+  onDisconnect,
 }) => {
   const getStatusIcon = () => {
     switch (status) {
-      case 'connected':
+      case "connected":
         return <CheckCircle size={16} className="text-green-500" />;
-      case 'connecting':
-      case 'reconnecting':
+      case "connecting":
+      case "reconnecting":
         return <RefreshCw size={16} className="text-yellow-500 animate-spin" />;
-      case 'error':
-      case 'failed':
+      case "error":
+      case "failed":
         return <XCircle size={16} className="text-red-500" />;
-      case 'disconnected':
+      case "disconnected":
       default:
         return <AlertCircle size={16} className="text-gray-500" />;
     }
@@ -26,35 +33,35 @@ const ConnectionStatus = ({
 
   const getStatusColor = () => {
     switch (status) {
-      case 'connected':
-        return 'status-online';
-      case 'connecting':
-      case 'reconnecting':
-        return 'status-connecting';
-      case 'error':
-      case 'failed':
-        return 'status-offline';
-      case 'disconnected':
+      case "connected":
+        return "status-online";
+      case "connecting":
+      case "reconnecting":
+        return "status-connecting";
+      case "error":
+      case "failed":
+        return "status-offline";
+      case "disconnected":
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
     }
   };
 
   const getStatusText = () => {
     switch (status) {
-      case 'connected':
-        return 'Connected';
-      case 'connecting':
-        return 'Connecting...';
-      case 'reconnecting':
-        return 'Reconnecting...';
-      case 'error':
-        return 'Connection Error';
-      case 'failed':
-        return 'Connection Failed';
-      case 'disconnected':
+      case "connected":
+        return "Connected";
+      case "connecting":
+        return "Connecting...";
+      case "reconnecting":
+        return "Reconnecting...";
+      case "error":
+        return "Connection Error";
+      case "failed":
+        return "Connection Failed";
+      case "disconnected":
       default:
-        return 'Disconnected';
+        return "Disconnected";
     }
   };
 
@@ -67,35 +74,34 @@ const ConnectionStatus = ({
           ) : (
             <WifiOff size={24} className="text-gray-400" />
           )}
-          <div>
+          <div className="grid justify-items-start space-y-2">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               {type} Connection
             </h3>
-            <div className={`connection-status ${getStatusColor()}`}>
-              {getStatusIcon()}
-              <span className="ml-2">{getStatusText()}</span>
+            <div className="">
+              <div className={`connection-status ${getStatusColor()}`}>
+                {getStatusIcon()}
+                <span className="ml-2">{getStatusText()}</span>
+              </div>
             </div>
           </div>
         </div>
-        
+
         <div className="flex space-x-2">
           {isConnected ? (
-            <button
-              onClick={onDisconnect}
-              className="btn-secondary"
-            >
+            <button onClick={onDisconnect} className="btn-secondary">
               Disconnect
             </button>
           ) : (
             <button
               onClick={onConnect}
               className="btn-primary"
-              disabled={status === 'connecting' || status === 'reconnecting'}
+              disabled={status === "connecting" || status === "reconnecting"}
             >
-              {status === 'connecting' || status === 'reconnecting' ? (
+              {status === "connecting" || status === "reconnecting" ? (
                 <RefreshCw size={16} className="animate-spin" />
               ) : (
-                'Connect'
+                "Connect"
               )}
             </button>
           )}
@@ -106,7 +112,9 @@ const ConnectionStatus = ({
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
           <div className="flex items-center">
             <XCircle size={16} className="text-red-500 mr-2" />
-            <span className="text-sm text-red-700 dark:text-red-400">{error}</span>
+            <span className="text-sm text-red-700 dark:text-red-400">
+              {error}
+            </span>
           </div>
         </div>
       )}
@@ -114,7 +122,9 @@ const ConnectionStatus = ({
       <div className="mt-4 grid grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
         <div>
           <span className="font-medium">Protocol:</span>
-          <span className="ml-2">{type === 'SSE' ? 'Server-Sent Events' : 'WebSocket'}</span>
+          <span className="ml-2">
+            {type === "SSE" ? "Server-Sent Events" : "WebSocket"}
+          </span>
         </div>
         <div>
           <span className="font-medium">State:</span>
