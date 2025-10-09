@@ -117,9 +117,13 @@ app.post('/api/reset', (req, res) => {
     // Reset performance monitor (clears metrics, counters, keeps connections)
     performanceMonitor.resetSimulationData();
     
+    // Reset connection message counters to start from 1
+    sseManager.resetAllConnections();
+    wsManager.resetAllConnections();
+    
     res.json({
       success: true,
-      message: 'All simulation data and metrics reset successfully'
+      message: 'All simulation data, metrics, and connection counters reset successfully'
     });
   } catch (error) {
     res.status(500).json({
@@ -130,8 +134,8 @@ app.post('/api/reset', (req, res) => {
 });
 
 // Setup SSE and WebSocket
-setupSSE(app, dataGenerator, performanceMonitor);
-setupWebSocket(server, dataGenerator, performanceMonitor);
+const sseManager = setupSSE(app, dataGenerator, performanceMonitor);
+const wsManager = setupWebSocket(server, dataGenerator, performanceMonitor);
 
 // Start server
 server.listen(PORT, () => {

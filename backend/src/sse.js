@@ -92,10 +92,14 @@ class SSEConnection {
 
     try {
       const startTime = Date.now();
+      
+      // Increment message counter first
+      this.messagesSent++;
+      
       const eventData = {
         ...data,
         eventType,
-        messageId: this.messagesSent + 1,
+        messageId: this.messagesSent,
         timestamp: startTime,
         connectionId: this.id
       };
@@ -104,7 +108,6 @@ class SSEConnection {
       const message = `id: ${eventData.messageId}\nevent: ${eventType}\ndata: ${JSON.stringify(eventData)}\n\n`;
       
       this.res.write(message);
-      this.messagesSent++;
       
       // Update connection quality
       this.connectionQuality.successfulMessages++;
@@ -131,6 +134,14 @@ class SSEConnection {
 
   sendMetrics(metrics) {
     return this.sendEvent('metrics', metrics);
+  }
+
+  resetMessageCounter() {
+    // Reset message counter for new simulation, but keep connection alive
+    this.messagesSent = 0;
+    this.connectionQuality.successfulMessages = 0;
+    this.connectionQuality.failedMessages = 0;
+    console.log(`📊 SSE connection ${this.id} message counter reset`);
   }
 
   cleanup() {
@@ -266,6 +277,16 @@ class SSEManager {
       }
     }
     return this.connections.size;
+  }
+
+  resetAllConnections() {
+    // Reset message counters for all active connections
+    for (const [id, connection] of this.connections) {
+      if (connection.connected) {
+        connection.resetMessageCounter();
+      }
+    }
+    console.log(`📊 All SSE connections reset (${this.connections.size} connections)`);
   }
 }
 

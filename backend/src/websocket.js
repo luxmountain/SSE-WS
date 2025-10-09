@@ -135,16 +135,19 @@ class WebSocketConnection {
 
     try {
       const startTime = Date.now();
+      
+      // Increment message counter first
+      this.messagesSent++;
+      
       const message = {
         type,
         data,
-        messageId: this.messagesSent + 1,
+        messageId: this.messagesSent,
         timestamp: startTime,
         connectionId: this.id
       };
 
       this.ws.send(JSON.stringify(message));
-      this.messagesSent++;
       
       // Update connection quality
       this.connectionQuality.successfulMessages++;
@@ -171,6 +174,16 @@ class WebSocketConnection {
 
   sendMetrics(metrics) {
     return this.sendMessage('metrics', metrics);
+  }
+
+  resetMessageCounter() {
+    // Reset message counter for new simulation, but keep connection alive
+    this.messagesSent = 0;
+    this.messagesReceived = 0;
+    this.connectionQuality.successfulMessages = 0;
+    this.connectionQuality.failedMessages = 0;
+    this.connectionQuality.reconnectAttempts = 0;
+    console.log(`📊 WebSocket connection ${this.id} message counter reset`);
   }
 
   cleanup() {
@@ -312,6 +325,16 @@ class WebSocketManager {
       }
     }
     return this.connections.size;
+  }
+
+  resetAllConnections() {
+    // Reset message counters for all active connections
+    for (const [id, connection] of this.connections) {
+      if (connection.connected && connection.ws.readyState === WebSocket.OPEN) {
+        connection.resetMessageCounter();
+      }
+    }
+    console.log(`📊 All WebSocket connections reset (${this.connections.size} connections)`);
   }
 }
 
