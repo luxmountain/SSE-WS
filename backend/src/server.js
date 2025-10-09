@@ -109,6 +109,26 @@ app.post('/api/stop-simulation', (req, res) => {
   });
 });
 
+app.post('/api/reset', (req, res) => {
+  try {
+    // Reset data generator (stops simulations, clears current data)
+    dataGenerator.resetData();
+    
+    // Reset performance monitor (clears metrics, counters, keeps connections)
+    performanceMonitor.resetSimulationData();
+    
+    res.json({
+      success: true,
+      message: 'All simulation data and metrics reset successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // Setup SSE and WebSocket
 setupSSE(app, dataGenerator, performanceMonitor);
 setupWebSocket(server, dataGenerator, performanceMonitor);

@@ -13,7 +13,6 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
   const reconnectDelay = useRef(1000);
-  const pingIntervalRef = useRef(null);
 
   const connect = useCallback(() => {
     if (websocketRef.current) {
@@ -33,16 +32,8 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
         setError(null);
         reconnectAttempts.current = 0;
         reconnectDelay.current = 1000;
-
-        // Start ping interval
-        pingIntervalRef.current = setInterval(() => {
-          if (websocket.readyState === WebSocket.OPEN) {
-            websocket.send(JSON.stringify({
-              type: 'ping',
-              timestamp: Date.now()
-            }));
-          }
-        }, 30000);
+        
+        // Server handles heartbeat, no need for client-side ping
       };
 
       websocket.onmessage = (event) => {
@@ -60,7 +51,9 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
               break;
               
             case 'metrics':
-              setMetrics(message.data);
+              // Don't set simulation metrics as performance metrics
+              // Performance metrics are fetched separately from /api/stats
+              console.log('Simulation metrics received:', message.data);
               break;
               
             case 'pong':
@@ -87,20 +80,16 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
       websocket.onclose = (event) => {
         console.log('WebSocket connection closed:', event.code, event.reason);
         setIsConnected(false);
-        
-        if (pingIntervalRef.current) {
-          clearInterval(pingIntervalRef.current);
-        }
 
-        // Only attempt reconnection if not manually closed
-        if (event.code !== 1000 && reconnectAttempts.current < maxReconnectAttempts) {
+        // Only attempt reconnection if not manually closed and not due to server close
+        if (event.code !== 1000 && event.code !== 1001 && reconnectAttempts.current < maxReconnectAttempts) {
           setConnectionStatus('reconnecting');
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttempts.current++;
             reconnectDelay.current = Math.min(reconnectDelay.current * 2, 30000);
             connect();
           }, reconnectDelay.current);
-        } else if (event.code === 1000) {
+        } else if (event.code === 1000 || event.code === 1001) {
           setConnectionStatus('disconnected');
         } else {
           setConnectionStatus('failed');
@@ -125,10 +114,6 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
   const disconnect = useCallback(() => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
-    }
-
-    if (pingIntervalRef.current) {
-      clearInterval(pingIntervalRef.current);
     }
 
     if (websocketRef.current) {
@@ -175,7 +160,10 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
         const response = await fetch('http://localhost:3001/api/stats');
         if (response.ok) {
           const stats = await response.json();
-          setMetrics(stats.websocket?.performance);
+          // Only set metrics if we have real performance data
+          if (stats.websocket?.performance && stats.websocket.performance.totalMessages > 0) {
+            setMetrics(stats.websocket.performance);
+          }
         }
       } catch (err) {
         console.error('Error fetching WebSocket metrics:', err);

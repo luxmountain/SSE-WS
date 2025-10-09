@@ -45,9 +45,10 @@ class DataGenerator extends EventEmitter {
     const intervalDuration = intervalMap[scenario] || 1000;
 
     simulation.interval = setInterval(() => {
+      // Increment message count first so it starts from 1
+      simulation.messageCount++;
       const data = this.scenarios[scenario](simulation);
       this.currentData = data;
-      simulation.messageCount++;
       
       // Emit data to both SSE and WebSocket
       this.emit('data', data);
@@ -97,6 +98,17 @@ class DataGenerator extends EventEmitter {
     console.log('🛑 All simulations stopped');
   }
 
+  resetData() {
+    // Stop all current simulations
+    this.stopAllSimulations();
+    
+    // Clear current data
+    this.currentData = null;
+    
+    // Reset will be handled when new simulation starts
+    console.log('📊 Data generator reset - ready for new simulation');
+  }
+
   getCurrentData() {
     return this.currentData;
   }
@@ -118,7 +130,7 @@ class DataGenerator extends EventEmitter {
         volume: Math.floor(Math.random() * 1000000),
         marketCap: (Math.random() * 1000000000000).toFixed(0)
       })),
-      messageId: simulation.messageCount + 1,
+      messageId: simulation.messageCount,
       simulationId: simulation.id
     };
   }
@@ -138,7 +150,7 @@ class DataGenerator extends EventEmitter {
         likes: Math.floor(Math.random() * 1000),
         timestamp: Date.now() - Math.random() * 3600000
       })),
-      messageId: simulation.messageCount + 1,
+      messageId: simulation.messageCount,
       simulationId: simulation.id
     };
   }
@@ -163,7 +175,7 @@ class DataGenerator extends EventEmitter {
           (Math.random() * 2).toFixed(2)
         ]
       },
-      messageId: simulation.messageCount + 1,
+      messageId: simulation.messageCount,
       simulationId: simulation.id
     };
   }
@@ -186,7 +198,7 @@ class DataGenerator extends EventEmitter {
         id: `msg-${Date.now()}-${Math.random()}`,
         reactions: Math.floor(Math.random() * 10)
       },
-      messageId: simulation.messageCount + 1,
+      messageId: simulation.messageCount,
       simulationId: simulation.id
     };
   }
@@ -205,7 +217,7 @@ class DataGenerator extends EventEmitter {
         battery: Math.floor(Math.random() * 100),
         status: Math.random() > 0.1 ? 'online' : 'offline'
       })),
-      messageId: simulation.messageCount + 1,
+      messageId: simulation.messageCount,
       simulationId: simulation.id
     };
   }
@@ -216,12 +228,12 @@ class DataGenerator extends EventEmitter {
       timestamp: Date.now(),
       data: {
         value: Math.random(),
-        sequence: simulation.messageCount + 1,
-        batch: Math.floor((simulation.messageCount + 1) / 100),
+        sequence: simulation.messageCount,
+        batch: Math.floor(simulation.messageCount / 100),
         frequency: 10, // 10 Hz
         signal: Math.sin((Date.now() / 1000) * 2 * Math.PI * 0.1) // 0.1 Hz sine wave
       },
-      messageId: simulation.messageCount + 1,
+      messageId: simulation.messageCount,
       simulationId: simulation.id
     };
   }

@@ -63,8 +63,9 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
 
       eventSource.addEventListener('metrics', (event) => {
         try {
-          const parsedMetrics = JSON.parse(event.data);
-          setMetrics(parsedMetrics);
+          // Don't set simulation metrics as performance metrics
+          // Performance metrics are fetched separately from /api/stats
+          console.log('Simulation metrics received:', JSON.parse(event.data));
         } catch (err) {
           console.error('Error parsing SSE metrics:', err);
         }
@@ -140,7 +141,10 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
         const response = await fetch('http://localhost:3001/api/stats');
         if (response.ok) {
           const stats = await response.json();
-          setMetrics(stats.sse?.performance);
+          // Only set metrics if we have real performance data
+          if (stats.sse?.performance && stats.sse.performance.totalMessages > 0) {
+            setMetrics(stats.sse.performance);
+          }
         }
       } catch (err) {
         console.error('Error fetching SSE metrics:', err);

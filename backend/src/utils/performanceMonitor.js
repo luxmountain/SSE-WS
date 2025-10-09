@@ -47,20 +47,26 @@ class PerformanceMonitor {
     if (connection) {
       const messageSize = JSON.stringify(message).length;
       
+      // Only count actual data messages, not system messages
+      const isDataMessage = message.type === 'data' || (!message.type && message.data);
+      
       connection.messagesSent++;
       connection.bytesSent += messageSize;
       connection.lastMessageTime = Date.now();
       
-      this.sseMetrics.totalMessages++;
-      this.sseMetrics.totalBytes += messageSize;
-      
-      // Calculate latency if timestamp is available
-      if (message.timestamp) {
-        const latency = Date.now() - message.timestamp;
-        this.sseMetrics.latencyHistory.push(latency);
-        // Keep only last 100 latency measurements
-        if (this.sseMetrics.latencyHistory.length > 100) {
-          this.sseMetrics.latencyHistory.shift();
+      // Only count data messages in performance metrics
+      if (isDataMessage) {
+        this.sseMetrics.totalMessages++;
+        this.sseMetrics.totalBytes += messageSize;
+        
+        // Calculate latency if timestamp is available
+        if (message.timestamp) {
+          const latency = Date.now() - message.timestamp;
+          this.sseMetrics.latencyHistory.push(latency);
+          // Keep only last 100 latency measurements
+          if (this.sseMetrics.latencyHistory.length > 100) {
+            this.sseMetrics.latencyHistory.shift();
+          }
         }
       }
     }
@@ -94,27 +100,34 @@ class PerformanceMonitor {
     if (connection) {
       const messageSize = JSON.stringify(message).length;
       
+      // Only count actual data messages, not system messages (ping, pong, connected, etc.)
+      const isDataMessage = message.type === 'data' || (!message.type && message.data);
+      
       if (direction === 'sent') {
         connection.messagesSent++;
         connection.bytesSent += messageSize;
-        this.wsMetrics.totalMessages++;
-        this.wsMetrics.totalBytes += messageSize;
+        
+        // Only count data messages in performance metrics
+        if (isDataMessage) {
+          this.wsMetrics.totalMessages++;
+          this.wsMetrics.totalBytes += messageSize;
+          
+          // Calculate latency if timestamp is available
+          if (message.timestamp) {
+            const latency = Date.now() - message.timestamp;
+            this.wsMetrics.latencyHistory.push(latency);
+            // Keep only last 100 latency measurements
+            if (this.wsMetrics.latencyHistory.length > 100) {
+              this.wsMetrics.latencyHistory.shift();
+            }
+          }
+        }
       } else {
         connection.messagesReceived++;
         connection.bytesReceived += messageSize;
       }
       
       connection.lastMessageTime = Date.now();
-      
-      // Calculate latency if timestamp is available
-      if (message.timestamp && direction === 'sent') {
-        const latency = Date.now() - message.timestamp;
-        this.wsMetrics.latencyHistory.push(latency);
-        // Keep only last 100 latency measurements
-        if (this.wsMetrics.latencyHistory.length > 100) {
-          this.wsMetrics.latencyHistory.shift();
-        }
-      }
     }
   }
 
@@ -134,6 +147,17 @@ class PerformanceMonitor {
     const minLatency = this.sseMetrics.latencyHistory.length > 0 
       ? Math.min(...this.sseMetrics.latencyHistory) 
       : 0;
+
+    // Calculate connection overhead and network usage
+    const totalConnectionMessages = connections.reduce((sum, conn) => sum + conn.messagesSent, 0);
+    const dataMessages = this.sseMetrics.totalMessages;
+    const connectionOverhead = totalConnectionMessages > 0 ? 
+      Math.round(((totalConnectionMessages - dataMessages) / totalConnectionMessages) * 100) : 0;
+    
+    const totalBandwidth = connections.reduce((sum, conn) => sum + conn.bytesSent, 0);
+    const dataBandwidth = this.sseMetrics.totalBytes;
+    const networkUsage = totalBandwidth > 0 ? 
+      Math.round((dataBandwidth / totalBandwidth) * 100) : 0;
 
     return {
       type: 'sse',
@@ -156,7 +180,9 @@ class PerformanceMonitor {
         maxLatency: Math.round(maxLatency),
         minLatency: Math.round(minLatency),
         messagesPerSecond: this.calculateMessagesPerSecond('sse'),
-        bytesPerSecond: this.calculateBytesPerSecond('sse')
+        bytesPerSecond: this.calculateBytesPerSecond('sse'),
+        connectionOverhead: connectionOverhead,
+        networkUsage: networkUsage
       },
       uptime: now - this.startTime,
       errors: this.sseMetrics.errors
@@ -178,6 +204,17 @@ class PerformanceMonitor {
     const minLatency = this.wsMetrics.latencyHistory.length > 0 
       ? Math.min(...this.wsMetrics.latencyHistory) 
       : 0;
+
+    // Calculate connection overhead and network usage
+    const totalConnectionMessages = connections.reduce((sum, conn) => sum + conn.messagesSent + conn.messagesReceived, 0);
+    const dataMessages = this.wsMetrics.totalMessages;
+    const connectionOverhead = totalConnectionMessages > 0 ? 
+      Math.round(((totalConnectionMessages - dataMessages) / totalConnectionMessages) * 100) : 0;
+    
+    const totalBandwidth = connections.reduce((sum, conn) => sum + conn.bytesSent + conn.bytesReceived, 0);
+    const dataBandwidth = this.wsMetrics.totalBytes;
+    const networkUsage = totalBandwidth > 0 ? 
+      Math.round((dataBandwidth / totalBandwidth) * 100) : 0;
 
     return {
       type: 'websocket',
@@ -202,7 +239,9 @@ class PerformanceMonitor {
         maxLatency: Math.round(maxLatency),
         minLatency: Math.round(minLatency),
         messagesPerSecond: this.calculateMessagesPerSecond('ws'),
-        bytesPerSecond: this.calculateBytesPerSecond('ws')
+        bytesPerSecond: this.calculateBytesPerSecond('ws'),
+        connectionOverhead: connectionOverhead,
+        networkUsage: networkUsage
       },
       uptime: now - this.startTime,
       errors: this.wsMetrics.errors
@@ -302,6 +341,37 @@ class PerformanceMonitor {
       latencyHistory: []
     };
     this.startTime = Date.now();
+  }
+
+  resetSimulationData() {
+    // Reset only performance metrics, keep connections alive
+    this.sseMetrics.totalMessages = 0;
+    this.sseMetrics.totalBytes = 0;
+    this.sseMetrics.errors = 0;
+    this.sseMetrics.latencyHistory = [];
+    
+    this.wsMetrics.totalMessages = 0;
+    this.wsMetrics.totalBytes = 0;
+    this.wsMetrics.errors = 0;
+    this.wsMetrics.latencyHistory = [];
+    
+    // Reset per-connection counters but keep connections
+    for (const connection of this.sseConnections.values()) {
+      connection.messagesSent = 0;
+      connection.bytesSent = 0;
+      connection.errors = 0;
+    }
+    
+    for (const connection of this.wsConnections.values()) {
+      connection.messagesSent = 0;
+      connection.messagesReceived = 0;
+      connection.bytesSent = 0;
+      connection.bytesReceived = 0;
+      connection.errors = 0;
+    }
+    
+    this.startTime = Date.now();
+    console.log('📊 Performance metrics reset for new simulation');
   }
 }
 
