@@ -73,21 +73,22 @@ const SimulationControls = ({
         {/* Duration Control */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Duration (seconds)
+            Duration
           </label>
-          <input
-            type="number"
+          <select
             value={duration}
-            onChange={(e) => onDurationChange(parseInt(e.target.value) || 30)}
-            min="5"
-            max="300"
-            step="5"
+            onChange={(e) => onDurationChange(parseInt(e.target.value))}
             disabled={isRunning}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
                      bg-white dark:bg-gray-700 text-gray-900 dark:text-white
                      focus:ring-2 focus:ring-blue-500 focus:border-transparent
                      disabled:opacity-50 disabled:cursor-not-allowed"
-          />
+          >
+            <option value={30}>30 seconds</option>
+            <option value={60}>1 minute</option>
+            <option value={120}>2 minutes</option>
+            <option value={300}>5 minutes</option>
+          </select>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             How long to run the simulation
           </p>
