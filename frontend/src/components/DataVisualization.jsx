@@ -15,13 +15,19 @@ const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
 
   useEffect(() => {
     if (data && data.timestamp !== lastUpdate) {
+      console.log(`${title} received message:`, {
+        messageId: data.messageId,
+        scenario: data.scenario,
+        timestamp: data.timestamp
+      });
+      
       setDisplayData(prevData => {
         const newData = [...prevData, { ...data, id: Date.now() }];
         return newData;
       });
       setLastUpdate(data.timestamp);
     }
-  }, [data, lastUpdate]);
+  }, [data, lastUpdate, title]);
 
   const colorClasses = {
     blue: {
@@ -251,7 +257,10 @@ const DataVisualization = ({ title, data, scenario, color = 'blue' }) => {
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
             <span>Scenario: {scenario.replace('-', ' ')}</span>
-            <span>Messages: {displayData.length}</span>
+            <span>
+              Messages: {displayData.length}
+              {displayData.length > 0 && ` (Last ID: ${displayData[displayData.length - 1]?.messageId})`}
+            </span>
           </div>
         </div>
       )}
