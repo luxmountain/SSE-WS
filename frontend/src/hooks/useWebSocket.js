@@ -141,7 +141,7 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
 
   const clearData = useCallback(() => {
     setData(null);
-    setMetrics(null);
+    // Don't clear metrics immediately - let the periodic fetch handle updates
   }, []);
 
   // Cleanup on unmount
@@ -160,13 +160,14 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
         const response = await fetch('http://localhost:3001/api/stats');
         if (response.ok) {
           const stats = await response.json();
-          // Only set metrics if we have real performance data
-          if (stats.websocket?.performance && stats.websocket.performance.totalMessages > 0) {
+          // Set metrics if websocket performance data exists (even with 0 messages)
+          if (stats.websocket?.performance) {
             setMetrics(stats.websocket.performance);
           }
         }
       } catch (err) {
         console.error('Error fetching WebSocket metrics:', err);
+        // Don't clear metrics on fetch error to avoid null flashing
       }
     };
 

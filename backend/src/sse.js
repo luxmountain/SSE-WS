@@ -78,7 +78,7 @@ class SSEConnection {
       });
       
       this.lastPingTime = Date.now();
-    }, 30000); // Ping every 30 seconds
+    }, 300000); // Ping every 30 seconds
   }
 
   sendEvent(eventType, data) {

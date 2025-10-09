@@ -122,7 +122,7 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
 
   const clearData = useCallback(() => {
     setData(null);
-    setMetrics(null);
+    // Don't clear metrics immediately - let the periodic fetch handle updates
   }, []);
 
   // Cleanup on unmount
@@ -141,13 +141,14 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
         const response = await fetch('http://localhost:3001/api/stats');
         if (response.ok) {
           const stats = await response.json();
-          // Only set metrics if we have real performance data
-          if (stats.sse?.performance && stats.sse.performance.totalMessages > 0) {
+          // Set metrics if sse performance data exists (even with 0 messages)
+          if (stats.sse?.performance) {
             setMetrics(stats.sse.performance);
           }
         }
       } catch (err) {
         console.error('Error fetching SSE metrics:', err);
+        // Don't clear metrics on fetch error to avoid null flashing
       }
     };
 
