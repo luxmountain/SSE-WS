@@ -30,8 +30,9 @@ const Dashboard = () => {
     connect: connectSSE,
     disconnect: disconnectSSE,
     clearData: clearSSEData,
+    resetMetrics: resetSSEMetrics,
     error: sseError,
-  } = useSSE();
+  } = useSSE('http://localhost:3001/events', isRunning);
 
   // WebSocket Connection
   const {
@@ -42,19 +43,17 @@ const Dashboard = () => {
     connect: connectWS,
     disconnect: disconnectWS,
     clearData: clearWSData,
+    resetMetrics: resetWSMetrics,
     error: wsError,
-  } = useWebSocket();
+  } = useWebSocket('ws://localhost:3001/websocket', isRunning);
 
-  // Auto-connect on mount
+  // Cleanup on unmount only
   useEffect(() => {
-    connectSSE();
-    connectWS();
-
     return () => {
       disconnectSSE();
       disconnectWS();
     };
-  }, [connectSSE, connectWS, disconnectSSE, disconnectWS]);
+  }, [disconnectSSE, disconnectWS]);
 
   // Countdown timer effect
   useEffect(() => {
@@ -82,10 +81,16 @@ const Dashboard = () => {
   const handleStartSimulation = async () => {
     if (isRunning) return;
 
-    // Clear old data before starting new simulation
+    // Clear old data and reset metrics before starting new simulation
     clearSSEData();
     clearWSData();
+    resetSSEMetrics();
+    resetWSMetrics();
     setSimulationKey((prev) => prev + 1);
+
+    // Connect to both SSE and WebSocket before starting simulation
+    connectSSE();
+    connectWS();
 
     try {
       const response = await fetch("http://localhost:3001/api/simulate/both", {
@@ -105,6 +110,9 @@ const Dashboard = () => {
         setTimeout(() => {
           setIsRunning(false);
           setTimeRemaining(0);
+          // Disconnect after simulation ends but keep data
+          disconnectSSE();
+          disconnectWS();
         }, duration * 1000);
       }
     } catch (error) {
@@ -119,6 +127,9 @@ const Dashboard = () => {
       });
       setIsRunning(false);
       setTimeRemaining(0);
+      // Disconnect but keep the data and metrics
+      disconnectSSE();
+      disconnectWS();
     } catch (error) {
       console.error("Failed to stop simulation:", error);
     }

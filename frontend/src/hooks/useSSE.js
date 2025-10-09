@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-export const useSSE = (url = 'http://localhost:3001/events') => {
+export const useSSE = (url = 'http://localhost:3001/events', shouldFetchMetrics = false) => {
   const [data, setData] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
@@ -121,6 +121,9 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
 
   const clearData = useCallback(() => {
     setData(null);
+  }, []);
+
+  const resetMetrics = useCallback(() => {
     setMetrics(null);
   }, []);
 
@@ -131,9 +134,9 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
     };
   }, [disconnect]);
 
-  // Fetch performance metrics periodically
+  // Fetch performance metrics periodically only if allowed
   useEffect(() => {
-    if (!isConnected) return;
+    if (!isConnected || !shouldFetchMetrics) return;
 
     const fetchMetrics = async () => {
       try {
@@ -149,7 +152,7 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
 
     const interval = setInterval(fetchMetrics, 2000);
     return () => clearInterval(interval);
-  }, [isConnected]);
+  }, [isConnected, shouldFetchMetrics]);
 
   return {
     data,
@@ -160,6 +163,7 @@ export const useSSE = (url = 'http://localhost:3001/events') => {
     connectionId,
     connect,
     disconnect,
-    clearData
+    clearData,
+    resetMetrics
   };
 };

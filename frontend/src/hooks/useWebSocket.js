@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
+export const useWebSocket = (url = 'ws://localhost:3001/websocket', shouldFetchMetrics = false) => {
   const [data, setData] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
@@ -156,6 +156,9 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
 
   const clearData = useCallback(() => {
     setData(null);
+  }, []);
+
+  const resetMetrics = useCallback(() => {
     setMetrics(null);
   }, []);
 
@@ -166,9 +169,9 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
     };
   }, [disconnect]);
 
-  // Fetch performance metrics periodically
+  // Fetch performance metrics periodically only if allowed
   useEffect(() => {
-    if (!isConnected) return;
+    if (!isConnected || !shouldFetchMetrics) return;
 
     const fetchMetrics = async () => {
       try {
@@ -184,7 +187,7 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
 
     const interval = setInterval(fetchMetrics, 2000);
     return () => clearInterval(interval);
-  }, [isConnected]);
+  }, [isConnected, shouldFetchMetrics]);
 
   return {
     data,
@@ -196,6 +199,7 @@ export const useWebSocket = (url = 'ws://localhost:3001/websocket') => {
     connect,
     disconnect,
     sendMessage,
-    clearData
+    clearData,
+    resetMetrics
   };
 };
