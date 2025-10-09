@@ -113,18 +113,15 @@ const Dashboard = () => {
         throw new Error('Failed to reset simulation data');
       }
 
-      // Clear old data and reset frontend state
       clearSSEData();
       clearWSData();
       
-      // Reset last metrics to ensure clean state
       setLastSSEMetrics(null);
       setLastWSMetrics(null);
       
       setSimulationKey((prev) => prev + 1);
       setHasSimulationRun(true);
 
-      // Start the new simulation
       const response = await fetch("http://localhost:3001/api/simulate/both", {
         method: "POST",
         headers: {
@@ -161,15 +158,12 @@ const Dashboard = () => {
     }
   };
 
-  // Helper function to determine which metrics to display
   const getDisplayMetrics = (currentMetrics, lastMetrics) => {
-    // If simulation is running, show current metrics only if it has real data
     if (isRunning) {
-      return (currentMetrics && currentMetrics.totalMessages > 0) ? currentMetrics : null;
+      return currentMetrics || null;
     }
     
-    // If simulation is not running, show last metrics if available
-    return hasSimulationRun ? lastMetrics : null;
+    return hasSimulationRun ? (lastMetrics || currentMetrics) : currentMetrics;
   };
 
   const scenarios = [
@@ -178,8 +172,6 @@ const Dashboard = () => {
     { value: "chat-messages", label: "Chat Messages", icon: MessageSquare },
     { value: "high-frequency", label: "High Frequency", icon: Zap },
   ];
-
-  console.log(wsMetrics);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
