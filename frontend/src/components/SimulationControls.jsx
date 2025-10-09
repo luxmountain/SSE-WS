@@ -164,9 +164,7 @@ const getScenarioDescription = (scenario) => {
   const descriptions = {
     'stock-prices': 'Real-time stock market data with prices, volume, and market cap updates. Good for testing steady data streams.',
     'social-feed': 'Social media activity simulation with posts, likes, and comments. Tests burst traffic patterns.',
-    'system-metrics': 'System performance monitoring including CPU, memory, disk usage. Tests moderate frequency updates.',
     'chat-messages': 'Live chat simulation with user messages and reactions. Tests high-frequency bidirectional communication.',
-    'iot-sensors': 'IoT device data including temperature, humidity, and sensor readings. Tests device monitoring scenarios.',
     'high-frequency': 'High-frequency data simulation at 10Hz. Tests maximum throughput and latency performance.'
   };
   

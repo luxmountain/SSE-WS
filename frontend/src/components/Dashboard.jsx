@@ -175,9 +175,7 @@ const Dashboard = () => {
   const scenarios = [
     { value: "stock-prices", label: "Stock Prices", icon: TrendingUp },
     { value: "social-feed", label: "Social Feed", icon: Smartphone },
-    { value: "system-metrics", label: "System Metrics", icon: Monitor },
     { value: "chat-messages", label: "Chat Messages", icon: MessageSquare },
-    { value: "iot-sensors", label: "IoT Sensors", icon: Thermometer },
     { value: "high-frequency", label: "High Frequency", icon: Zap },
   ];
 
