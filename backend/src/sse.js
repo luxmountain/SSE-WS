@@ -31,7 +31,6 @@ class SSEConnection {
     // Get the origin from request headers for dynamic CORS
     const origin = this.res.req.headers.origin || 'http://localhost:5173';
     
-    // Set SSE headers with proper CORS support
     this.res.writeHead(200, {
       'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-cache, no-store, must-revalidate, no-transform',
